@@ -12,10 +12,10 @@ const log = new ChildLogger();
 
 module.exports = {
 	name: 'add',
-	description: 'Add a member to a ticket channel',
+	description: 'Aggiungi un membro al canale Supporto',
 	usage: '<@member> [... #channel]',
 	aliases: ['none'],
-	example: 'add @member to #ticket-23',
+	example: 'add @membro to #ticket-23',
 	args: true,
 	async execute(client, message, args, {config, Ticket}) {
 
@@ -24,10 +24,10 @@ module.exports = {
 		const notTicket = new MessageEmbed()
 			.setColor(config.err_colour)
 			.setAuthor(message.author.username, message.author.displayAvatarURL())
-			.setTitle(':x: **This isn\'t a ticket channel**')
+			.setTitle(':x: **Questo non è un canale di Supporto**')
 			.setDescription('Use this command in the ticket channel you want to add a user to, or mention the channel.')
 			.addField('Usage', `\`${config.prefix}${this.name} ${this.usage}\`\n`)
-			.addField('Help', `Type \`${config.prefix}help ${this.name}\` for more information`)
+			.addField('Help', `Usa \`${config.prefix}help ${this.name}\` per informazioni aggiuntive`)
 			.setFooter(guild.name, guild.iconURL());
 
 		let ticket;
@@ -46,8 +46,8 @@ module.exports = {
 			ticket = await Ticket.findOne({ where: { channel: channel.id } });
 			if(!ticket) {
 				notTicket
-					.setTitle(':x: **Channel is not a ticket**')
-					.setDescription(`${channel} is not a ticket channel.`);
+					.setTitle(':x: **Il canale non è una richiesta di supporto**')
+					.setDescription(`${channel} non è una richiesta di supporto.`);
 				return message.channel.send(notTicket);
 			}
 		}
@@ -57,10 +57,10 @@ module.exports = {
 				new MessageEmbed()
 					.setColor(config.err_colour)
 					.setAuthor(message.author.username, message.author.displayAvatarURL())
-					.setTitle(':x: **No permission**')
-					.setDescription(`You don't have permission to alter ${channel} as it does not belong to you and you are not staff.`)
+					.setTitle(':x: **Senza permesso**')
+					.setDescription(`Non hai il permesso di modificare ${channel}, esso non ti appartiene e non sei un membro dello staff.`)
 					.addField('Usage', `\`${config.prefix}${this.name} ${this.usage}\`\n`)
-					.addField('Help', `Type \`${config.prefix}help ${this.name}\` for more information`)
+					.addField('Help', `Usa \`${config.prefix}help ${this.name}\` per informazioni aggiuntive`)
 					.setFooter(guild.name, guild.iconURL())
 			);
 		
@@ -73,10 +73,10 @@ module.exports = {
 				new MessageEmbed()
 					.setColor(config.err_colour)
 					.setAuthor(message.author.username, message.author.displayAvatarURL())
-					.setTitle(':x: **Unknown member**')
+					.setTitle(':x: **Membro sconosciuto**')
 					.setDescription('Please mention a valid member.')
 					.addField('Usage', `\`${config.prefix}${this.name} ${this.usage}\`\n`)
-					.addField('Help', `Type \`${config.prefix}help ${this.name}\` for more information`)
+					.addField('Help', `Type \`${config.prefix}help ${this.name}\` per ulteriori informazioni`)
 					.setFooter(guild.name, guild.iconURL())
 			);
 
@@ -104,8 +104,8 @@ module.exports = {
 				new MessageEmbed()
 					.setColor(config.colour)
 					.setAuthor(member.user.username, member.user.displayAvatarURL())
-					.setTitle(':white_check_mark: **Member added**')
-					.setDescription(`${member} has been added to <#${ticket.channel}>`)
+					.setTitle(':white_check_mark: **Membro aggiunto**')
+					.setDescription(`${member} è stato aggiunto a <#${ticket.channel}>`)
 					.setFooter(guild.name, guild.iconURL())
 			);
 			
