@@ -16,7 +16,7 @@ const archive = require('../modules/archive');
 
 module.exports = {
 	name: 'close',
-	description: 'Close a ticket; either a specified (mentioned) channel, or the channel the command is used in.',
+	description: 'Chiudi una richiesta di supporto; menzionando il canale o usandolo all\'interno di esso.',
 	usage: '[ticket]',
 	aliases: ['none'],
 	example: 'close #ticket-17',
@@ -31,10 +31,10 @@ module.exports = {
 		const notTicket = new MessageEmbed()
 			.setColor(config.err_colour)
 			.setAuthor(message.author.username, message.author.displayAvatarURL())
-			.setTitle(':x: **This isn\'t a ticket channel**')
-			.setDescription('Use this command in the ticket channel you want to close, or mention the channel.')
+			.setTitle(':x: **Questa non è una richiesta di supporto**')
+			.setDescription('Usa questo comando all\'interno della richiesta di supporto.')
 			.addField('Usage', `\`${config.prefix}${this.name} ${this.usage}\`\n`)
-			.addField('Help', `Type \`${config.prefix}help ${this.name}\` for more information`)
+			.addField('Help', `Usa \`${config.prefix}help ${this.name}\` per ulteriori informazioni`)
 			.setFooter(guild.name, guild.iconURL());
 
 		let ticket;
@@ -61,8 +61,8 @@ module.exports = {
 			});
 			if (!ticket) {
 				notTicket
-					.setTitle(':x: **Channel is not a ticket**')
-					.setDescription(`${channel} is not a ticket channel.`);
+					.setTitle(':x: **Il canale è una richiesta di supporto**')
+					.setDescription(`${channel} non è una richiesta di supporto.`);
 				return message.channel.send(notTicket);
 			}
 
@@ -71,10 +71,10 @@ module.exports = {
 					new MessageEmbed()
 						.setColor(config.err_colour)
 						.setAuthor(message.author.username, message.author.displayAvatarURL())
-						.setTitle(':x: **No permission**')
-						.setDescription(`You don't have permission to close ${channel} as it does not belong to you and you are not staff.`)
+						.setTitle(':x: **Permesso negato**')
+						.setDescription(`Non hai il permesso per chiudere ${channel}, esso non ti appartiene e non sei membro dello staff.`)
 						.addField('Usage', `\`${config.prefix}${this.name} ${this.usage}\`\n`)
-						.addField('Help', `Type \`${config.prefix}help ${this.name}\` for more information`)
+						.addField('Help', `Usa \`${config.prefix}help ${this.name}\` per ulteriori informazioni`)
 						.setFooter(guild.name, guild.iconURL())
 				);
 		}
@@ -82,16 +82,16 @@ module.exports = {
 		let success;
 		let pre = fs.existsSync(`user/transcripts/text/${channel.id}.txt`) ||
 			fs.existsSync(`user/transcripts/raw/${channel.id}.log`) ?
-			`You will be able to view an archived version later with \`${config.prefix}transcript ${ticket.id}\`` :
+			`Sarai in grado di vedere una versione archiviata a \`${config.prefix}transcript ${ticket.id}\`` :
 			'';
 
 		let confirm = await message.channel.send(
 			new MessageEmbed()
 				.setColor(config.colour)
 				.setAuthor(message.author.username, message.author.displayAvatarURL())
-				.setTitle(':grey_question: Are you sure?')
-				.setDescription(`${pre}\n**React with :white_check_mark: to confirm.**`)
-				.setFooter(guild.name + ' | Expires in 15 seconds', guild.iconURL())
+				.setTitle(':grey_question: Sei sicuro?')
+				.setDescription(`${pre}\n**Reagisci con :white_check_mark: per confermare.**`)
+				.setFooter(guild.name + ' | L\'operazione si annullerà tra 15 secondi', guild.iconURL())
 		);
 
 		await confirm.react('✅');
@@ -107,8 +107,8 @@ module.exports = {
 					new MessageEmbed()
 						.setColor(config.colour)
 						.setAuthor(message.author.username, message.author.displayAvatarURL())
-						.setTitle('**Ticket closed**')
-						.setDescription(`Ticket closed by ${message.author}`)
+						.setTitle('**Richiesta di supporto archiviata**')
+						.setDescription(`Richiesta archiviata da ${message.author}`)
 						.setFooter(guild.name, guild.iconURL())
 				);
 
@@ -117,8 +117,8 @@ module.exports = {
 				new MessageEmbed()
 					.setColor(config.colour)
 					.setAuthor(message.author.username, message.author.displayAvatarURL())
-					.setTitle(`:white_check_mark: **Ticket ${ticket.id} closed**`)
-					.setDescription('The channel will be automatically deleted in a few seconds, once the contents have been archived.')
+					.setTitle(`:white_check_mark: **Richiest di supporto ${ticket.id} archiviata**`)
+					.setDescription('Il canale sarà automaticamente rimosso.')
 					.setFooter(guild.name, guild.iconURL())
 			);
 
@@ -130,7 +130,7 @@ module.exports = {
 					try {
 						dm = u.dmChannel || await u.createDM();
 					} catch (e) {
-						log.warn(`Could not create DM channel with ${u.tag}`);
+						log.warn(`Impossibile creare il canale ${u.tag}`);
 					}
 
 
@@ -185,16 +185,16 @@ module.exports = {
 						.then(() => confirm.delete());
 			}, 5000);
 
-			log.info(`${message.author.tag} closed a ticket (#ticket-${ticket.id})`);
+			log.info(`${message.author.tag} ha chiuso la richiesta di supporto (#ticket-${ticket.id})`);
 
 			if (config.logs.discord.enabled)
 				client.channels.cache.get(config.logs.discord.channel).send(
 					new MessageEmbed()
 						.setColor(config.colour)
 						.setAuthor(message.author.username, message.author.displayAvatarURL())
-						.setTitle('Ticket closed')
-						.addField('Creator', `<@${ticket.creator}>`, true)
-						.addField('Closed by', message.author, true)
+						.setTitle('Richiesta chiusa')
+						.addField('Creatore', `<@${ticket.creator}>`, true)
+						.addField('Chiusa da', message.author, true)
 						.setFooter(guild.name, guild.iconURL())
 						.setTimestamp()
 				);
@@ -208,8 +208,8 @@ module.exports = {
 					new MessageEmbed()
 						.setColor(config.err_colour)
 						.setAuthor(message.author.username, message.author.displayAvatarURL())
-						.setTitle(':x: **Expired**')
-						.setDescription('You took to long to react; confirmation failed.')
+						.setTitle(':x: **Tempo scaduto**')
+						.setDescription('Hai impiegato troppo tempo per reagire; conferma annullata.')
 						.setFooter(guild.name, guild.iconURL()));
 
 				message.delete({
